@@ -69,17 +69,41 @@ Die Anzeige besteht aus einer Punktmatrix von LED&#039;s in einer rechteckigen K
 
 ### Beispiel(e)
 
-#### DotLEDMatrix
+DotLEDMatrix gibt eine Laufschrift und nachher Zahlen und Buchstaben auf dem Gerät aus.
 
-DotLEDMatrix gibt eine Laufschrift und nachher  Zahlen und Buchstaben auf dem Gerät aus.
+<details><summary>main.cpp</summary>  
 
+    /** Beispiel fuer die Dot LED Matrix Ansteuerung
+    */
+    #include "mbed.h"
+    #include "Driver.h"
+    
+    // Dot LED Matrix Driver (SPI-2 Anschluss)
+    LMDriver matrix( MBED_CONF_IOTKIT_DOTLED_MOSI, MBED_CONF_IOTKIT_DOTLED_MISO, MBED_CONF_IOTKIT_DOTLED_SCLK, MBED_CONF_IOTKIT_DOTLED_SS );
+    
+    int main()
+    {
+        matrix.Setup();
+        // Scrollgeschwindigkeit
+        matrix.SetWaitTime( 400 );
+    
+        while   ( 1 )
+        {
+            // String welcher scrollend dargestellt wird.
+            printf( "Ein Text welche auf dem Display erscheint\r\n" );
+            matrix.DisplayString( "Das ist ein Test mit 26.3C" );
+            thread_sleep_for( 1000 );
+            
+            // Alfabet anzeigen
+            for ( unsigned char i = '0'; i <= 'z'; i++ )
+            {
+                matrix.DisplayChar( i );
+                thread_sleep_for( 500 );
+            }
+        }
+    }
 
-#### DotLEDMatrixLowLevel
-
-DotLEDMatrixLowLevel bringt die LEDs einzeln zum Leuchten.
-
-
-
+</p></details>
 
 ## RGB LED Streifen
 ***
@@ -111,20 +135,150 @@ Auf dem Strip kommen [WS2801](http://www.adafruit.com/datasheets/WS2801.pdf) IC&
 
 ### Beispiel(e)
 
-* [RGBLEDStripSPI](RGBLEDStripSPI/src/main.cpp) bringt die verschiedenen Farben pro RGB LED zum leuchten.
-* [FernsehSimulator](FernsehSimulator/src/main.cpp) simuliert mittels unterschiedlichen Farbvarianten einen Fernseher, z.B. um Einbrecher abzuschrecken.
+#### RGBLEDStripSPI
 
-**Compilieren**
+RGBLEDStripSPI bringt die verschiedenen Farben pro RGB LED zum leuchten.
 
-| Umgebung/Board    | Link/Befehl                      |
-| ----------------- | -------------------------------- |
-| Online Compiler | [RGBLEDStripSPI](https://os.mbed.com/compiler/#import:/teams/IoTKitV3/code/RGBLEDStripSPI/) |
-| CLI (IoTKit K64F) | `mbed compile -m K64F --source . --source ../IoTKitV3/spi/RGBLEDStripSPI; ` <br> `cp BUILD/K64F/GCC_ARM/template.bin $DAPLINK` |
-| CLI (DISCO_L475VG_IOT01A) | `mbed compile -m DISCO_L475VG_IOT01A -f --source . --source ../IoTKitV3/spi/RGBLEDStripSPI` |
-| CLI (nucleo_f303re) | `mbed compile -m nucleo_f303re -f --source . --source ../IoTKitV3/spi/RGBLEDStripSPI` |
-- - -
-| Umgebung/Board    | Link/Befehl                      |
-| ----------------- | -------------------------------- |
-| CLI (IoTKit K64F) | `mbed compile -m K64F --source . --source ../IoTKitV3/spi/FernsehSimulator; ` <br> `cp BUILD/K64F/GCC_ARM/template.bin $DAPLINK` |
-| CLI (DISCO_L475VG_IOT01A) | `mbed compile -m DISCO_L475VG_IOT01A -f --source . --source ../IoTKitV3/spi/FernsehSimulator` |
-| CLI (nucleo_f303re) | `mbed compile -m nucleo_f303re -f --source . --source ../IoTKitV3/spi/FernsehSimulator` |
+<details><summary>main.cpp</summary> 
+
+    /** RGB LED Strip (SPI)
+    */
+    #include "mbed.h"
+    
+    // SPI 1 oder 2, da kein SS
+    SPI spi( MBED_CONF_IOTKIT_LED_SPI_MOSI, NC, MBED_CONF_IOTKIT_LED_SPI_SCLK ); // mosi, miso, sclk
+    
+    /** 3 x 3 Werte */
+    unsigned int strip[9];
+    
+    void writeLED()
+    {
+        for ( int p = 0; p < 9; p++ )
+            spi.write( strip[p] );
+    }
+    
+    void clearLED()
+    {
+        for ( int p = 0; p < 9; p++ ) 
+        {
+            strip[p] = 0;
+            spi.write( strip[p] );
+        }
+    }
+    
+    int main()
+    {
+        printf( "LED Strip Test \n" );
+         
+        spi.format( 8,0 );
+        spi.frequency( 800000 );
+        
+        while (true) 
+        {
+            // Gruen, Rot, Blau - von Dunkel bis Hell
+            for ( int i = 0; i < 128; i+=32 )
+            {
+                    // LED 1
+                    strip[0] = i;
+                    strip[1] = 0;
+                    strip[2] = 0;
+                    // LED 2
+                    strip[3] = 0;
+                    strip[4] = i;
+                    strip[5] = 0;
+                    // LED 3
+                    strip[6] = 0;
+                    strip[7] = 0;
+                    strip[8] = i;
+                    writeLED();
+                    thread_sleep_for( 100 );
+            }
+            thread_sleep_for( 1000 );
+            clearLED();
+    
+            // Lauflicht (5 x 4 Zustaende)
+            int p = 0;
+            for ( int i = 0; i < 20; i++ )
+            {
+                p++;
+                switch  ( p )
+                {
+                    case 1:
+                        strip[0] = strip[1] = strip[2] = 32;
+                        break;
+                    case 2:
+                        strip[0] = strip[1] = strip[2] = 0;
+                        strip[3] = strip[4] = strip[5] = 32;
+                        break;
+                    case 3:
+                        strip[3] = strip[4] = strip[5] = 0;
+                        strip[6] = strip[7] = strip[8] = 32;
+                        break;
+                    default:
+                        clearLED();
+                        p = 0;
+                        break;
+                }
+                writeLED();
+                thread_sleep_for( 200 );                    
+            }
+        }
+    }
+      
+</p></details>
+
+
+#### FernsehSimulator
+
+FernsehSimulator simuliert mittels unterschiedlichen Farbvarianten einen Fernseher, z.B. um Einbrecher abzuschrecken.
+
+<details><summary>main.cpp</summary> 
+
+    /** Zahlfallszahlen erzeugen und damit Fernsehsimulator fuettern
+    */
+    #include "mbed.h"
+    #include <time.h>
+    
+    SPI spi( MBED_CONF_IOTKIT_LED_SPI_MOSI, NC, MBED_CONF_IOTKIT_LED_SPI_SCLK ); // mosi, miso, sclk
+    
+    /** 3 x 3 Werte */
+    unsigned int strip[9];
+    
+    void writeLED()
+    {
+        for ( int p = 0; p < 9; p++ )
+            spi.write( strip[p] );
+    }
+    
+    void clearLED()
+    {
+        for ( int p = 0; p < 9; p++ ) 
+        {
+            strip[p] = 0;
+            spi.write( strip[p] );
+        }
+    }
+    
+    int main()
+    {
+        printf( "LED Strip Test \n" );
+         
+        spi.format( 8,0 );
+        spi.frequency( 800000 );
+    
+        clearLED();
+        time_t t;
+        time(&t);
+        srand( (unsigned int)t );              /* Zufallsgenerator initialisieren */
+    
+        while   ( 1 )
+        {
+            for ( int i = 0; i < 9; i++ )
+                strip[i] = rand() % 64 + 1;
+                
+            writeLED();
+            thread_sleep_for( 200 );
+        }
+    }
+
+</p></details>
