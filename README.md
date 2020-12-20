@@ -1,15 +1,15 @@
 ## SPI (Serial Peripheral Interface)
 ***
 
-> [⇧ **Home**](../README.md)
+> [⇧ **Home**](https://github.com/iotkitv4/intro)
 
-![](../images/SPI.png)
+![](https://raw.githubusercontent.com/iotkitv4/intro/main/images/SPI.png)
 
 SPI Sternverbindung [Quelle Wikipedia](http://de.wikipedia.org/wiki/Serial_Peripheral_Interface)
 
 - - -
 
-![](../images/SPI2.png) 
+![](https://raw.githubusercontent.com/iotkitv4/intro/main/images/SPI2.png) 
 
 SPI-Verbindung durch Kaskadierung der Slaves [Quelle Wikipedia](http://de.wikipedia.org/wiki/Serial_Peripheral_Interface) 
 
@@ -44,7 +44,7 @@ Je nach Anordnung der Slaves wird eine (bei Kaskadierung) oder mehrere (bei Ster
 
 > [⇧ **Nach oben**](#beispiele)
 
-![](../images/actors/DotLEDMatrix.png) 
+![](https://raw.githubusercontent.com/iotkitv4/intro/main/images/actors/DotLEDMatrix.png) 
 
 Schaltplan Dot LED Matrix
 
@@ -69,23 +69,16 @@ Die Anzeige besteht aus einer Punktmatrix von LED&#039;s in einer rechteckigen K
 
 ### Beispiel(e)
 
-* [DotLEDMatrix](DotLEDMatrix/src/main.cpp) gibt eine Laufschrift und nachher  Zahlen und Buchstaben auf dem Gerät aus.
-* [DotLEDMatrixLowLevel](DotLEDMatrixLowLevel/src/main.cpp) bringt die LEDs einzeln zum Leuchten.
+#### DotLEDMatrix
 
-**Compilieren**
+DotLEDMatrix gibt eine Laufschrift und nachher  Zahlen und Buchstaben auf dem Gerät aus.
 
-| Umgebung/Board    | Link/Befehl                      |
-| ----------------- | -------------------------------- |
-| Online Compiler | [DotLEDMatrix](https://os.mbed.com/compiler/#import:/teams/IoTKitV3/code/DotLEDMatrix/) |
-| CLI (IoTKit K64F) | `mbed compile -m K64F --source . --source ../IoTKitV3/spi/DotLEDMatrix; ` <br> `cp BUILD/K64F/GCC_ARM/template.bin $DAPLINK` |
-| CLI (DISCO_L475VG_IOT01A) | `mbed compile -m DISCO_L475VG_IOT01A -f --source . --source ../IoTKitV3/spi/DotLEDMatrix` |
-| CLI (nucleo_f303re) | `mbed compile -m nucleo_f303re -f --source . --source ../IoTKitV3/spi/DotLEDMatrix` |
-- - -
-| Umgebung/Board    | Link/Befehl                      |
-| ----------------- | -------------------------------- |
-| CLI (IoTKit K64F) | `mbed compile -m K64F --source . --source ../IoTKitV3/spi/DotLEDMatrixLowLevel; ` <br> `cp BUILD/K64F/GCC_ARM/template.bin $DAPLINK` |
-| CLI (DISCO_L475VG_IOT01A) | `mbed compile -m DISCO_L475VG_IOT01A -f --source . --source ../IoTKitV3/spi/DotLEDMatrixLowLevel` |
-| CLI (nucleo_f303re) | `mbed compile -m nucleo_f303re -f --source . --source ../IoTKitV3/spi/DotLEDMatrixLowLevel` |
+
+#### DotLEDMatrixLowLevel
+
+DotLEDMatrixLowLevel bringt die LEDs einzeln zum Leuchten.
+
+
 
 
 ## RGB LED Streifen
@@ -93,7 +86,7 @@ Die Anzeige besteht aus einer Punktmatrix von LED&#039;s in einer rechteckigen K
 
 > [⇧ **Nach oben**](#beispiele)
 
-![](../images/actors/LedStrips.png)
+![](https://raw.githubusercontent.com/iotkitv4/intro/main/images/actors/LedStrips.png)
 
 [RGB LED Strip, siehe LadyAda Überguide](https://learn.adafruit.com/adafruit-neopixel-uberguide) 
 

@@ -286,8 +286,8 @@ class LMDriver
     SPI* spi;
     DigitalOut* cs;
     PinName _msoi,_miso,_sclk,_cs;
-    float wtime;
-    float cwtime;
+    int wtime;
+    int cwtime;
     int freq;
     void writeToReg(int reg, int value) {
         cs->write(0);
@@ -364,7 +364,7 @@ public:
             return;
         this->spi->frequency(freq);
     }
-    void SetWaitTime(float time, bool test=true) {
+    void SetWaitTime(int time, bool test=true) {
         if(test) wtime=time;
         else cwtime=time;
     }
@@ -396,7 +396,7 @@ void LMDriver:: DisplayStringStep(const string& str, bool test)
             else if(j==8)
                 fillDeque(regs,' ',7,test);
             displayDeque(regs);
-            wait(cwtime);
+            thread_sleep_for(cwtime);
         }
     }
 }
@@ -436,7 +436,7 @@ void LMDriver::DisplayStringCont(const string& str)
     for(int i=0; i<str.size(); i++) {
         for(int j=0; j<10; j++) {
             displayDeque(output);
-            wait(cwtime);
+            thread_sleep_for(cwtime);
             output.pop_front();
             if(j<2)
                 output.push_back(0);
@@ -454,7 +454,7 @@ void LMDriver::DisplayString(const string& str)
         return;
     for(int i=0; i<str.size(); i++) {
         DisplayChar(str[i]);
-        wait(wtime);
+        thread_sleep_for(wtime);
     }
     zeroFill();
 }
@@ -487,8 +487,8 @@ LMDriver::LMDriver(PinName msoi, PinName miso, PinName sclk,PinName chip_select)
     _msoi=msoi;
     _sclk=sclk;
     _cs=chip_select;
-    wtime=0.5;
-    cwtime=0.1;
+    wtime=500;
+    cwtime=100;
 }
 LMDriver::~LMDriver()
 {
