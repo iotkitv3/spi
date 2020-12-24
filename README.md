@@ -1,15 +1,15 @@
 ## SPI (Serial Peripheral Interface)
 ***
 
-> [⇧ **Home**](https://github.com/iotkitv4/intro)
+> [⇧ **Home**](https://github.com/iotkitv3/intro)
 
-![](https://raw.githubusercontent.com/iotkitv4/intro/main/images/SPI.png)
+![](https://raw.githubusercontent.com/iotkitv3/intro/main/images/SPI.png)
 
 SPI Sternverbindung [Quelle Wikipedia](http://de.wikipedia.org/wiki/Serial_Peripheral_Interface)
 
 - - -
 
-![](https://raw.githubusercontent.com/iotkitv4/intro/main/images/SPI2.png) 
+![](https://raw.githubusercontent.com/iotkitv3/intro/main/images/SPI2.png) 
 
 SPI-Verbindung durch Kaskadierung der Slaves [Quelle Wikipedia](http://de.wikipedia.org/wiki/Serial_Peripheral_Interface) 
 
@@ -44,7 +44,7 @@ Je nach Anordnung der Slaves wird eine (bei Kaskadierung) oder mehrere (bei Ster
 
 > [⇧ **Nach oben**](#beispiele)
 
-![](https://raw.githubusercontent.com/iotkitv4/intro/main/images/actors/DotLEDMatrix.png) 
+![](https://raw.githubusercontent.com/iotkitv3/intro/main/images/actors/DotLEDMatrix.png) 
 
 Schaltplan Dot LED Matrix
 
@@ -110,7 +110,7 @@ DotLEDMatrix gibt eine Laufschrift und nachher Zahlen und Buchstaben auf dem Ger
 
 > [⇧ **Nach oben**](#beispiele)
 
-![](https://raw.githubusercontent.com/iotkitv4/intro/main/images/actors/LedStrips.png)
+![](https://raw.githubusercontent.com/iotkitv3/intro/main/images/actors/LedStrips.png)
 
 [RGB LED Strip, siehe LadyAda Überguide](https://learn.adafruit.com/adafruit-neopixel-uberguide) 
 
