@@ -36,8 +36,98 @@ Je nach Anordnung der Slaves wird eine (bei Kaskadierung) oder mehrere (bei Ster
 
 ## Beispiele
 
-* [Dot LED Matrix](#dot-led-matrix)
 * [RGB LED Streifen - SPI Version](#rgb-led-streifen)
+* [Dot LED Matrix](#dot-led-matrix)
+
+
+## RGB LED Streifen
+***
+
+> [⇧ **Nach oben**](#beispiele)
+
+![](https://raw.githubusercontent.com/iotkitv3/intro/main/images/actors/LedStrips.png)
+
+[RGB LED Strip, siehe LadyAda Überguide](https://learn.adafruit.com/adafruit-neopixel-uberguide) 
+
+- - -
+
+LED Strips (RGB LED Streifen) eröffnen neue Möglichkeiten für die Dekorative Beleuchtungen von Gegenständen und Räumen.
+
+LED Strips werden in den unterschiedlichsten Formen angeboten.
+
+Es gibt unterschiedliche Arten der Ansteuerung, alle LED einer Farbe, jedes RGB LED einzeln.
+
+Im aktuellen Beispiel verwenden wird ein LED Strip mit einen IC pro RGB LED, d.h. jedes RGB LED kann einzeln via SPI Bus angesprochen werden.
+
+Die LED Strip wird an GND, 5V (!) und an die Datenpins CI - D13 (SLK), DI - D11 (MOSI) angeschlossen.
+
+Auf dem Strip kommen [WS2801](http://www.adafruit.com/datasheets/WS2801.pdf) IC&#039;s zum Einsatz. Das Gegenstück zum WS2801 ist der [WS2811](https://www.adafruit.com/datasheets/WS2811.pdf) IC welcher aber nur mit ein paar mbed Boards funktioniert.
+
+### Anwendungen 
+
+*   Raumbeleuchtung
+*   Dekorative Ausleuchtung von Gegenständen
+
+### Beispiel(e)
+
+#### RGBLEDStripSPI
+
+[RGBLEDStripSPI](main.cpp) bringt die verschiedenen Farben pro RGB LED zum leuchten.
+
+#### FernsehSimulator
+
+FernsehSimulator simuliert mittels unterschiedlichen Farbvarianten einen Fernseher, z.B. um Einbrecher abzuschrecken.
+
+<details><summary>main.cpp</summary> 
+
+    /** Zahlfallszahlen erzeugen und damit Fernsehsimulator fuettern
+    */
+    #include "mbed.h"
+    #include <time.h>
+    
+    SPI spi( MBED_CONF_IOTKIT_LED_SPI_MOSI, NC, MBED_CONF_IOTKIT_LED_SPI_SCLK ); // mosi, miso, sclk
+    
+    /** 3 x 3 Werte */
+    unsigned int strip[9];
+    
+    void writeLED()
+    {
+        for ( int p = 0; p < 9; p++ )
+            spi.write( strip[p] );
+    }
+    
+    void clearLED()
+    {
+        for ( int p = 0; p < 9; p++ ) 
+        {
+            strip[p] = 0;
+            spi.write( strip[p] );
+        }
+    }
+    
+    int main()
+    {
+        printf( "LED Strip Test \n" );
+         
+        spi.format( 8,0 );
+        spi.frequency( 800000 );
+    
+        clearLED();
+        time_t t;
+        time(&t);
+        srand( (unsigned int)t );              /* Zufallsgenerator initialisieren */
+    
+        while   ( 1 )
+        {
+            for ( int i = 0; i < 9; i++ )
+                strip[i] = rand() % 64 + 1;
+                
+            writeLED();
+            thread_sleep_for( 200 );
+        }
+    }
+
+</p></details>
 
 ## Dot LED Matrix
 ***
@@ -105,180 +195,3 @@ DotLEDMatrix gibt eine Laufschrift und nachher Zahlen und Buchstaben auf dem Ger
 
 </p></details>
 
-## RGB LED Streifen
-***
-
-> [⇧ **Nach oben**](#beispiele)
-
-![](https://raw.githubusercontent.com/iotkitv3/intro/main/images/actors/LedStrips.png)
-
-[RGB LED Strip, siehe LadyAda Überguide](https://learn.adafruit.com/adafruit-neopixel-uberguide) 
-
-- - -
-
-LED Strips (RGB LED Streifen) eröffnen neue Möglichkeiten für die Dekorative Beleuchtungen von Gegenständen und Räumen.
-
-LED Strips werden in den unterschiedlichsten Formen angeboten.
-
-Es gibt unterschiedliche Arten der Ansteuerung, alle LED einer Farbe, jedes RGB LED einzeln.
-
-Im aktuellen Beispiel verwenden wird ein LED Strip mit einen IC pro RGB LED, d.h. jedes RGB LED kann einzeln via SPI Bus angesprochen werden.
-
-Die LED Strip wird an GND, 5V (!) und an die Datenpins CI - D13 (SLK), DI - D11 (MOSI) angeschlossen.
-
-Auf dem Strip kommen [WS2801](http://www.adafruit.com/datasheets/WS2801.pdf) IC&#039;s zum Einsatz. Das Gegenstück zum WS2801 ist der [WS2811](https://www.adafruit.com/datasheets/WS2811.pdf) IC welcher aber nur mit ein paar mbed Boards funktioniert.
-
-### Anwendungen 
-
-*   Raumbeleuchtung
-*   Dekorative Ausleuchtung von Gegenständen
-
-### Beispiel(e)
-
-#### RGBLEDStripSPI
-
-RGBLEDStripSPI bringt die verschiedenen Farben pro RGB LED zum leuchten.
-
-<details><summary>main.cpp</summary> 
-
-    /** RGB LED Strip (SPI)
-    */
-    #include "mbed.h"
-    
-    // SPI 1 oder 2, da kein SS
-    SPI spi( MBED_CONF_IOTKIT_LED_SPI_MOSI, NC, MBED_CONF_IOTKIT_LED_SPI_SCLK ); // mosi, miso, sclk
-    
-    /** 3 x 3 Werte */
-    unsigned int strip[9];
-    
-    void writeLED()
-    {
-        for ( int p = 0; p < 9; p++ )
-            spi.write( strip[p] );
-    }
-    
-    void clearLED()
-    {
-        for ( int p = 0; p < 9; p++ ) 
-        {
-            strip[p] = 0;
-            spi.write( strip[p] );
-        }
-    }
-    
-    int main()
-    {
-        printf( "LED Strip Test \n" );
-         
-        spi.format( 8,0 );
-        spi.frequency( 800000 );
-        
-        while (true) 
-        {
-            // Gruen, Rot, Blau - von Dunkel bis Hell
-            for ( int i = 0; i < 128; i+=32 )
-            {
-                    // LED 1
-                    strip[0] = i;
-                    strip[1] = 0;
-                    strip[2] = 0;
-                    // LED 2
-                    strip[3] = 0;
-                    strip[4] = i;
-                    strip[5] = 0;
-                    // LED 3
-                    strip[6] = 0;
-                    strip[7] = 0;
-                    strip[8] = i;
-                    writeLED();
-                    thread_sleep_for( 100 );
-            }
-            thread_sleep_for( 1000 );
-            clearLED();
-    
-            // Lauflicht (5 x 4 Zustaende)
-            int p = 0;
-            for ( int i = 0; i < 20; i++ )
-            {
-                p++;
-                switch  ( p )
-                {
-                    case 1:
-                        strip[0] = strip[1] = strip[2] = 32;
-                        break;
-                    case 2:
-                        strip[0] = strip[1] = strip[2] = 0;
-                        strip[3] = strip[4] = strip[5] = 32;
-                        break;
-                    case 3:
-                        strip[3] = strip[4] = strip[5] = 0;
-                        strip[6] = strip[7] = strip[8] = 32;
-                        break;
-                    default:
-                        clearLED();
-                        p = 0;
-                        break;
-                }
-                writeLED();
-                thread_sleep_for( 200 );                    
-            }
-        }
-    }
-      
-</p></details>
-
-
-#### FernsehSimulator
-
-FernsehSimulator simuliert mittels unterschiedlichen Farbvarianten einen Fernseher, z.B. um Einbrecher abzuschrecken.
-
-<details><summary>main.cpp</summary> 
-
-    /** Zahlfallszahlen erzeugen und damit Fernsehsimulator fuettern
-    */
-    #include "mbed.h"
-    #include <time.h>
-    
-    SPI spi( MBED_CONF_IOTKIT_LED_SPI_MOSI, NC, MBED_CONF_IOTKIT_LED_SPI_SCLK ); // mosi, miso, sclk
-    
-    /** 3 x 3 Werte */
-    unsigned int strip[9];
-    
-    void writeLED()
-    {
-        for ( int p = 0; p < 9; p++ )
-            spi.write( strip[p] );
-    }
-    
-    void clearLED()
-    {
-        for ( int p = 0; p < 9; p++ ) 
-        {
-            strip[p] = 0;
-            spi.write( strip[p] );
-        }
-    }
-    
-    int main()
-    {
-        printf( "LED Strip Test \n" );
-         
-        spi.format( 8,0 );
-        spi.frequency( 800000 );
-    
-        clearLED();
-        time_t t;
-        time(&t);
-        srand( (unsigned int)t );              /* Zufallsgenerator initialisieren */
-    
-        while   ( 1 )
-        {
-            for ( int i = 0; i < 9; i++ )
-                strip[i] = rand() % 64 + 1;
-                
-            writeLED();
-            thread_sleep_for( 200 );
-        }
-    }
-
-</p></details>
