@@ -27,7 +27,17 @@ Die Datenleitungen werden manchmal auch SDO (englisch Serial Data Out) und SDI (
 
 Je nach Anordnung der Slaves wird eine (bei Kaskadierung) oder mehrere (bei Stern) Chip-Select-Leitungen, welche alle vom Master gesteuert werden, benötigt. Diese Leitungen werden unterschiedlich mit Bezeichnungen wie SS, CS oder STE für Slave Select, Chip Select oder Slave Transmit Enable bezeichnet.
 
-**Anders auf der Unterseite des Boards Beschriftet, teilen sich die SPI-1 und SPI-2 Anschlüsse die Pins MISO (PTD6), MISO (PTD7) und SLCK (PTD5), Unterscheiden jedoch SPI-1 SS (PTD4) und SPI-2 SS (PTE6). Damit können zwei Geräte an den gleichen SPI Bus angeschlossen, aber unterschiedlich, mittels dem SS Pin, angesprochen werden.** 
+#### Hinweise
+
+**IoTKitV3 K64F Board**
+
+Anders auf der Unterseite des Boards Beschriftet, teilen sich die SPI-1 und SPI-2 Anschlüsse die Pins MISO (PTD6), MISO (PTD7) und SLCK (PTD5), Unterscheiden jedoch SPI-1 SS (PTD4) und SPI-2 SS (PTE6). Damit können zwei Geräte an den gleichen SPI Bus angeschlossen, aber unterschiedlich, mittels dem SS Pin, angesprochen werden.
+
+**NUCLEO-F429ZI**
+
+Das Board hat einen Konflikt zwischen Ethernet- und SPI-Pins auf Arduino Header D11 (MOSI).
+
+Deshalb muss für die SPI Beispiele der Jumper JP6 geöffnet werden, siehe auch [hier](https://os.mbed.com/teams/ST/wiki/Nucleo-144pins-ethernet-spi-conflict). 
 
 ### Anwendungen 
 
